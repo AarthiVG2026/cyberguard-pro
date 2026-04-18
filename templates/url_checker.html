@@ -1,0 +1,630 @@
+{% extends "base.html" %}
+
+{% block title %}URL Security Checker - CyberGuard Pro{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-cyber-blue text-white text-center py-4">
+                    <h1 class="h2 mb-0">
+                        <i class="fas fa-link me-2"></i>URL Security Checker
+                    </h1>
+                    <p class="mb-0 opacity-75">Analyze URLs for security threats, phishing, and malware</p>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form method="POST" class="mb-4">
+                        <div class="mb-3">
+                            <label for="url" class="form-label fw-bold">
+                                <i class="fas fa-globe me-2"></i>Enter URL to Check
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-link"></i>
+                                </span>
+                                <input type="url" 
+                                       class="form-control form-control-lg" 
+                                       id="url" 
+                                       name="url" 
+                                       placeholder="https://example.com" 
+                                       required
+                                       value="{{ request.form.url if request.form.url }}">
+                            </div>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Enter any URL to check for security threats, SSL certificates, and potential risks
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-cyber-blue btn-lg">
+                                <i class="fas fa-search me-2"></i>Analyze URL Security
+                            </button>
+                        </div>
+                    </form>
+
+                    {% if not current_user.is_authenticated %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Enhanced Features for Registered Users:</strong>
+                        <a href="{{ url_for('register') }}" class="alert-link">Register</a> to get detailed mistake analysis, 
+                        downloadable reports, and security history tracking.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if result %}
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header {{ 'bg-success' if result.is_safe else 'bg-danger' }} text-white">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h3 class="mb-0">
+                                <i class="fas fa-{{ 'shield-alt' if result.is_safe else 'exclamation-triangle' }} me-2"></i>
+                                Security Analysis Results
+                            </h3>
+                        </div>
+                        <div class="col-auto">
+                            {% if current_user.is_authenticated and url_check %}
+                            <div class="btn-group" role="group">
+                                <a href="{{ url_for('download_report', report_type='url', check_id=url_check.id, format='pdf') }}" 
+                                   class="btn btn-sm btn-light btn-sm-black">
+                                    <i class="fas fa-file-pdf me-2"></i>Download PDF
+                                </a>
+                                <a href="{{ url_for('download_report', report_type='url', check_id=url_check.id, format='csv') }}" 
+                                   class="btn btn-outline-light">
+                                    <i class="fas fa-file-csv me-2"></i>CSV
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-body p-4">
+                    <!-- URL and Overall Status -->
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <h5 class="text-muted mb-2">Analyzed URL</h5>
+                            <p class="lead text-break">{{ result.url }}</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <h5 class="text-muted mb-2">Overall Status</h5>
+                            <span class="badge {{ 'bg-success' if result.is_safe else 'bg-danger' }} fs-6 px-3 py-2">
+                                {% if result.is_safe %}
+                                    <i class="fas fa-check-circle me-1"></i>SAFE
+                                {% else %}
+                                    <i class="fas fa-exclamation-triangle me-1"></i>RISK DETECTED
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Security Score -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="text-muted mb-0">Security Score</h5>
+                            <span class="fw-bold">{{ result.security_score }}/100</span>
+                        </div>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar 
+                                {{ 'bg-success' if result.security_score >= 70 else 'bg-warning' if result.security_score >= 40 else 'bg-danger' }}" 
+                                role="progressbar" 
+                                style="width: {{ result.security_score }}%"
+                                data-score="{{ result.security_score }}">
+                                {{ result.security_score }}%
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Analysis -->
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        <i class="fas fa-certificate me-2 text-primary"></i>SSL Certificate
+                                    </h6>
+                                    <span class="badge bg-{{ 'success' if result.ssl_status == 'Valid' else 'warning' if result.ssl_status == 'No SSL' else 'danger' }}">
+                                        {{ result.ssl_status }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        <i class="fas fa-fishing-pole me-2 text-warning"></i>Phishing Check
+                                    </h6>
+                                    <span class="badge bg-{{ 'success' if result.phishing_status == 'Clean' else 'danger' }}">
+                                        {{ result.phishing_status }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        <i class="fas fa-virus me-2 text-danger"></i>Malware Check
+                                    </h6>
+                                    <span class="badge bg-{{ 'success' if result.malware_status == 'Clean' else 'danger' }}">
+                                        {{ result.malware_status }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        <i class="fas fa-calendar-alt me-2 text-info"></i>Domain Age
+                                    </h6>
+                                    {% if result.domain_age %}
+                                        <span class="badge bg-{{ 'success' if result.domain_age > 365 else 'warning' if result.domain_age > 30 else 'danger' }}">
+                                            {{ result.domain_age }} days
+                                        </span>
+                                        {% if result.domain_age > 365 %}
+                                            <small class="text-muted d-block">Well established</small>
+                                        {% elif result.domain_age > 30 %}
+                                            <small class="text-muted d-block">Moderately aged</small>
+                                        {% else %}
+                                            <small class="text-warning d-block">Very new domain</small>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="badge bg-secondary">Not available</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Threat Types -->
+                    {% if result.threat_types %}
+                    <div class="mb-4">
+                        <h5 class="text-danger mb-3">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Identified Threats
+                        </h5>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for threat in result.threat_types %}
+                                <span class="badge bg-danger">{{ threat }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Detailed Mistake Description (for registered users) -->
+                    {% if current_user.is_authenticated and result.mistake_description %}
+                    <div class="mb-4">
+                        <h5 class="text-warning mb-3">
+                            <i class="fas fa-exclamation-circle me-2"></i>Security Issues Identified
+                        </h5>
+                        <div class="alert alert-warning">
+                            <i class="fas fa-info-circle me-2"></i>
+                            {{ result.mistake_description }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Recommendations -->
+                    {% if result.recommendations %}
+                    <div class="mb-4">
+                        <h5 class="text-success mb-3">
+                            <i class="fas fa-lightbulb me-2"></i>Security Recommendations
+                        </h5>
+                        <ul class="list-group list-group-flush">
+                            {% for recommendation in result.recommendations %}
+                                <li class="list-group-item border-0 px-0">
+                                    <i class="fas fa-check text-success me-2"></i>{{ recommendation }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Comprehensive Domain Details (for authenticated users) -->
+                    {% if current_user.is_authenticated and result.detailed_analysis %}
+                    <div class="mb-4">
+                        <h5 class="text-info mb-3">
+                            <i class="fas fa-info-circle me-2"></i>Detailed Analysis
+                        </h5>
+                        
+                        <!-- Domain Information -->
+                        {% if result.detailed_analysis.domain_age_details %}
+                        <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0"><i class="fas fa-globe me-2"></i>Domain Information</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    {% set domain_details = result.detailed_analysis.domain_age_details %}
+                                    
+                                    <div class="col-md-6 mb-2">
+                                        <strong>Status:</strong> 
+                                        <span class="badge bg-{{ 'success' if domain_details.status == 'Success' else 'warning' }}">
+                                            {{ domain_details.status }}
+                                        </span>
+                                    </div>
+                                    
+                                    {% if domain_details.creation_date %}
+                                    <div class="col-md-6 mb-2">
+                                        <strong>Created:</strong> 
+                                        <span class="text-muted">{{ domain_details.creation_date[:10] }}</span>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if domain_details.expiry_date %}
+                                    <div class="col-md-6 mb-2">
+                                        <strong>Expires:</strong> 
+                                        <span class="text-muted">{{ domain_details.expiry_date[:10] }}</span>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if domain_details.registrar %}
+                                    <div class="col-md-6 mb-2">
+                                        <strong>Registrar:</strong> 
+                                        <span class="text-muted">{{ domain_details.registrar }}</span>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if domain_details.age_days %}
+                                    <div class="col-md-6 mb-2">
+                                        <strong>Age:</strong> 
+                                        <span class="text-muted">
+                                            {{ domain_details.age_days }} days 
+                                            ({{ (domain_details.age_days / 365) | round(1) }} years)
+                                        </span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- SSL Certificate Details -->
+                        {% if result.detailed_analysis.ssl %}
+                        <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0"><i class="fas fa-certificate me-2"></i>SSL Certificate Details</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    {% set ssl_details = result.detailed_analysis.ssl %}
+                                    
+                                    <div class="col-md-6 mb-2">
+                                        <strong>Status:</strong> 
+                                        <span class="badge bg-{{ 'success' if ssl_details.status == 'Valid' else 'warning' if ssl_details.status == 'No SSL' else 'danger' }}">
+                                            {{ ssl_details.status }}
+                                        </span>
+                                    </div>
+                                    
+                                    {% if ssl_details.expiry_date %}
+                                    <div class="col-md-6 mb-2">
+                                        <strong>Expires:</strong> 
+                                        <span class="text-muted">{{ ssl_details.expiry_date[:10] }}</span>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    <div class="col-12 mb-2">
+                                        <strong>Details:</strong> 
+                                        <span class="text-muted">{{ ssl_details.details }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Phishing Analysis Details -->
+                        {% if result.detailed_analysis.phishing %}
+                        <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Phishing Analysis</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    {% set phishing_details = result.detailed_analysis.phishing %}
+                                    
+                                    <div class="col-md-6 mb-2">
+                                        <strong>Status:</strong> 
+                                        <span class="badge bg-{{ 'success' if phishing_details.status == 'Clean' else 'danger' }}">
+                                            {{ phishing_details.status }}
+                                        </span>
+                                    </div>
+                                    
+                                    {% if phishing_details.indicators %}
+                                    <div class="col-md-6 mb-2">
+                                        <strong>Indicators Found:</strong> 
+                                        <span class="text-warning">{{ phishing_details.indicators | length }}</span>
+                                    </div>
+                                    
+                                    <div class="col-12 mb-2">
+                                        <strong>Specific Indicators:</strong>
+                                        <div class="mt-1">
+                                            {% for indicator in phishing_details.indicators %}
+                                                <span class="badge bg-warning me-1">{{ indicator }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    <div class="col-12 mb-2">
+                                        <strong>Details:</strong> 
+                                        <span class="text-muted">{{ phishing_details.details }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Malware Analysis Details -->
+                        {% if result.detailed_analysis.malware %}
+                        <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0"><i class="fas fa-virus me-2"></i>Malware Analysis</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    {% set malware_details = result.detailed_analysis.malware %}
+                                    
+                                    <div class="col-md-6 mb-2">
+                                        <strong>Status:</strong> 
+                                        <span class="badge bg-{{ 'success' if malware_details.status == 'Clean' else 'danger' }}">
+                                            {{ malware_details.status }}
+                                        </span>
+                                    </div>
+                                    
+                                    {% if malware_details.indicators %}
+                                    <div class="col-md-6 mb-2">
+                                        <strong>Indicators Found:</strong> 
+                                        <span class="text-danger">{{ malware_details.indicators | length }}</span>
+                                    </div>
+                                    
+                                    <div class="col-12 mb-2">
+                                        <strong>Specific Indicators:</strong>
+                                        <div class="mt-1">
+                                            {% for indicator in malware_details.indicators %}
+                                                <span class="badge bg-danger me-1">{{ indicator }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    <div class="col-12 mb-2">
+                                        <strong>Details:</strong> 
+                                        <span class="text-muted">{{ malware_details.details }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Network Information -->
+                        {% if result.detailed_analysis.network_info %}
+                        <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0"><i class="fas fa-network-wired me-2"></i>Network Information</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    {% set network_info = result.detailed_analysis.network_info %}
+                                    
+                                    {% if network_info.ip_addresses %}
+                                    <div class="col-md-6 mb-2">
+                                        <strong>IP Addresses:</strong>
+                                        <div class="mt-1">
+                                            {% for ip in network_info.ip_addresses %}
+                                                <span class="badge bg-info me-1">{{ ip }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if network_info.canonical_name %}
+                                    <div class="col-md-6 mb-2">
+                                        <strong>Canonical Name:</strong> 
+                                        <span class="text-muted">{{ network_info.canonical_name }}</span>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if network_info.port_scan and network_info.port_scan.open_ports %}
+                                    <div class="col-12 mb-2">
+                                        <strong>Open Ports:</strong>
+                                        <div class="mt-1">
+                                            {% for port in network_info.port_scan.open_ports %}
+                                                <span class="badge bg-{{ 'success' if port in [80, 443] else 'warning' }} me-1">{{ port }}</span>
+                                            {% endfor %}
+                                        </div>
+                                        <small class="text-muted">Scanned: {{ network_info.port_scan.scanned_ports | join(', ') }}</small>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if network_info.dns_records %}
+                                    <div class="col-12 mb-2">
+                                        <strong>DNS Records:</strong>
+                                        <div class="mt-2">
+                                            {% for record_type, records in network_info.dns_records.items() %}
+                                                {% if records %}
+                                                <div class="mb-2">
+                                                    <span class="badge bg-secondary me-2">{{ record_type }}</span>
+                                                    {% for record in records %}
+                                                        <span class="text-muted me-2">{{ record }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Advanced Security Analysis -->
+                        {% if result.detailed_analysis.advanced_security %}
+                        <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Advanced Security Analysis</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    {% set advanced_security = result.detailed_analysis.advanced_security %}
+                                    
+                                    <!-- URL Structure Analysis -->
+                                    {% if advanced_security.url_structure %}
+                                    <div class="col-md-6 mb-3">
+                                        <strong>URL Structure:</strong>
+                                        <div class="mt-1">
+                                            {% set url_struct = advanced_security.url_structure %}
+                                            <div><small><strong>Scheme:</strong> {{ url_struct.scheme }}</small></div>
+                                            {% if url_struct.port %}
+                                            <div><small><strong>Port:</strong> {{ url_struct.port }}</small></div>
+                                            {% endif %}
+                                            <div><small><strong>Path Depth:</strong> {{ url_struct.path_depth }}</small></div>
+                                            <div><small><strong>Subdomains:</strong> {{ url_struct.subdomain_count }}</small></div>
+                                            {% if url_struct.has_query %}<span class="badge bg-info">Has Query</span>{% endif %}
+                                            {% if url_struct.has_fragment %}<span class="badge bg-info">Has Fragment</span>{% endif %}
+                                            {% if url_struct.suspicious_chars %}<span class="badge bg-warning">Suspicious Characters</span>{% endif %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    <!-- Domain Reputation -->
+                                    {% if advanced_security.domain_reputation %}
+                                    <div class="col-md-6 mb-3">
+                                        <strong>Domain Reputation:</strong>
+                                        <div class="mt-1">
+                                            {% set reputation = advanced_security.domain_reputation %}
+                                            <div class="mb-2">
+                                                <span class="badge bg-{{ 'success' if reputation.score >= 70 else 'warning' if reputation.score >= 40 else 'danger' }}">
+                                                    Score: {{ reputation.score }}/100
+                                                </span>
+                                            </div>
+                                            {% if reputation.factors %}
+                                            <div>
+                                                <small><strong>Factors:</strong></small>
+                                                {% for factor in reputation.factors %}
+                                                    <div><small>• {{ factor }}</small></div>
+                                                {% endfor %}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    <!-- Security Headers -->
+                                    {% if advanced_security.security_headers %}
+                                    <div class="col-12 mb-2">
+                                        <strong>Security Headers:</strong>
+                                        <div class="mt-1">
+                                            {% set headers = advanced_security.security_headers %}
+                                            {% if headers.headers_present is defined %}
+                                            <div class="mb-2">
+                                                <span class="badge bg-{{ 'success' if headers.security_score >= 60 else 'warning' if headers.security_score >= 20 else 'danger' }}">
+                                                    {{ headers.headers_present }}/6 Headers Present ({{ headers.security_score }}/100)
+                                                </span>
+                                            </div>
+                                            
+                                            {% if headers.headers %}
+                                            <div class="row">
+                                                {% for header, value in headers.headers.items() %}
+                                                    {% if header != 'status_code' %}
+                                                    <div class="col-md-6 mb-1">
+                                                        <small>
+                                                            <strong>{{ header.replace('-', ' ').title() }}:</strong>
+                                                            {% if value %}
+                                                                <span class="text-success">✓ Present</span>
+                                                            {% else %}
+                                                                <span class="text-muted">✗ Missing</span>
+                                                            {% endif %}
+                                                        </small>
+                                                    </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% if headers.headers.status_code %}
+                                                <div class="col-md-6 mb-1">
+                                                    <small><strong>HTTP Status:</strong> {{ headers.headers.status_code }}</small>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            {% endif %}
+                                            {% endif %}
+                                            
+                                            {% if headers.error %}
+                                            <div class="text-muted">
+                                                <small>Could not retrieve headers: {{ headers.error }}</small>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Analysis Timestamp -->
+                    <div class="border-top pt-3 mt-4">
+                        <small class="text-muted">
+                            <i class="fas fa-clock me-1"></i>
+                            Analysis completed on {{ url_check.checked_at.strftime('%Y-%m-%d at %H:%M UTC') if url_check else 'just now' }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Educational Section -->
+    <div class="row justify-content-center mt-5">
+        <div class="col-lg-10">
+            <div class="card border-0 bg-light">
+                <div class="card-body p-4">
+                    <h4 class="text-cyber-blue mb-3">
+                        <i class="fas fa-graduation-cap me-2"></i>Understanding URL Security
+                    </h4>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <h6 class="text-cyber-purple">SSL Certificates</h6>
+                            <p class="text-muted small">SSL certificates encrypt data between your browser and the website, protecting against eavesdropping.</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <h6 class="text-cyber-purple">Phishing Detection</h6>
+                            <p class="text-muted small">We analyze URLs for patterns commonly used in phishing attacks that impersonate legitimate services.</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <h6 class="text-cyber-purple">Malware Scanning</h6>
+                            <p class="text-muted small">Our system checks for known malware indicators and suspicious domain patterns.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-focus on URL input
+document.addEventListener('DOMContentLoaded', function() {
+    const urlInput = document.getElementById('url');
+    if (urlInput && !urlInput.value) {
+        urlInput.focus();
+    }
+});
+</script>
+{% endblock %}

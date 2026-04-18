@@ -1,0 +1,303 @@
+{% extends "base.html" %}
+
+{% block title %}Cyber Threats Guide - CyberGuard Pro{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <div class="card border-0 bg-gradient bg-danger text-white">
+                <div class="card-body py-5">
+                    <i class="fas fa-virus display-1 mb-4 opacity-75"></i>
+                    <h1 class="display-4 fw-bold mb-3">Understanding Cyber Threats</h1>
+                    <p class="lead mb-0">Learn about common cybersecurity threats and how to protect yourself</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Threat Categories -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center text-cyber-blue mb-5">
+                <i class="fas fa-exclamation-triangle me-2"></i>Major Threat Categories
+            </h2>
+        </div>
+        
+        <!-- Phishing -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0">
+                        <i class="fas fa-fishing-hook me-2"></i>Phishing Attacks
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Deceptive attempts to steal sensitive information by impersonating trusted entities.</p>
+                    
+                    <h6 class="text-warning">Common Signs:</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-danger me-2"></i>Urgent or threatening language</li>
+                        <li><i class="fas fa-check text-danger me-2"></i>Suspicious sender addresses</li>
+                        <li><i class="fas fa-check text-danger me-2"></i>Generic greetings</li>
+                        <li><i class="fas fa-check text-danger me-2"></i>Requests for personal information</li>
+                        <li><i class="fas fa-check text-danger me-2"></i>Suspicious links or attachments</li>
+                    </ul>
+                    
+                    <h6 class="text-success">Protection Tips:</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-shield-alt text-success me-2"></i>Verify sender identity independently</li>
+                        <li><i class="fas fa-shield-alt text-success me-2"></i>Check URLs before clicking</li>
+                        <li><i class="fas fa-shield-alt text-success me-2"></i>Use our URL checker tool</li>
+                        <li><i class="fas fa-shield-alt text-success me-2"></i>Enable two-factor authentication</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Malware -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-virus me-2"></i>Malware
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Malicious software designed to damage, disrupt, or gain unauthorized access to systems.</p>
+                    
+                    <h6 class="text-danger">Types of Malware:</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-bug text-danger me-2"></i>Viruses and Worms</li>
+                        <li><i class="fas fa-spy text-danger me-2"></i>Spyware and Adware</li>
+                        <li><i class="fas fa-lock text-danger me-2"></i>Ransomware</li>
+                        <li><i class="fas fa-robot text-danger me-2"></i>Trojans and Rootkits</li>
+                        <li><i class="fas fa-network-wired text-danger me-2"></i>Botnets</li>
+                    </ul>
+                    
+                    <h6 class="text-success">Prevention Strategies:</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-shield-alt text-success me-2"></i>Keep software updated</li>
+                        <li><i class="fas fa-shield-alt text-success me-2"></i>Use reputable antivirus software</li>
+                        <li><i class="fas fa-shield-alt text-success me-2"></i>Avoid suspicious downloads</li>
+                        <li><i class="fas fa-shield-alt text-success me-2"></i>Regular system backups</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Password Attacks -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-key me-2"></i>Password Attacks
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Attempts to gain unauthorized access by compromising user passwords.</p>
+                    
+                    <h6 class="text-primary">Attack Methods:</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-hammer text-primary me-2"></i>Brute force attacks</li>
+                        <li><i class="fas fa-book text-primary me-2"></i>Dictionary attacks</li>
+                        <li><i class="fas fa-users text-primary me-2"></i>Credential stuffing</li>
+                        <li><i class="fas fa-eye text-primary me-2"></i>Shoulder surfing</li>
+                        <li><i class="fas fa-keyboard text-primary me-2"></i>Keylogging</li>
+                    </ul>
+                    
+                    <h6 class="text-success">Strong Password Practices:</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-shield-alt text-success me-2"></i>Use complex, unique passwords</li>
+                        <li><i class="fas fa-shield-alt text-success me-2"></i>Enable multi-factor authentication</li>
+                        <li><i class="fas fa-shield-alt text-success me-2"></i>Use password managers</li>
+                        <li><i class="fas fa-shield-alt text-success me-2"></i>Regular password updates</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Social Engineering -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-users me-2"></i>Social Engineering
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Psychological manipulation to trick people into divulging confidential information.</p>
+                    
+                    <h6 class="text-info">Common Techniques:</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-phone text-info me-2"></i>Pretexting (fake scenarios)</li>
+                        <li><i class="fas fa-gift text-info me-2"></i>Baiting with enticing offers</li>
+                        <li><i class="fas fa-user-tie text-info me-2"></i>Authority impersonation</li>
+                        <li><i class="fas fa-clock text-info me-2"></i>Creating false urgency</li>
+                        <li><i class="fas fa-heart text-info me-2"></i>Building false trust</li>
+                    </ul>
+                    
+                    <h6 class="text-success">Defense Strategies:</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-shield-alt text-success me-2"></i>Verify identities independently</li>
+                        <li><i class="fas fa-shield-alt text-success me-2"></i>Be skeptical of unsolicited contact</li>
+                        <li><i class="fas fa-shield-alt text-success me-2"></i>Never share sensitive info via phone/email</li>
+                        <li><i class="fas fa-shield-alt text-success me-2"></i>Follow company security protocols</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Real-World Examples -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-0 bg-light">
+                <div class="card-body p-5">
+                    <h3 class="text-cyber-purple mb-4 text-center">
+                        <i class="fas fa-newspaper me-2"></i>Real-World Threat Examples
+                    </h3>
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-danger">
+                                        <i class="fas fa-envelope me-2"></i>Email Phishing
+                                    </h5>
+                                    <p class="card-text">
+                                        Fake emails appearing to be from banks, asking users to "verify" their account 
+                                        information by clicking malicious links that steal login credentials.
+                                    </p>
+                                    <div class="alert alert-warning alert-sm">
+                                        <strong>Red Flag:</strong> Urgent action required immediately
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-danger">
+                                        <i class="fas fa-lock me-2"></i>Ransomware
+                                    </h5>
+                                    <p class="card-text">
+                                        Malicious software that encrypts user files and demands payment for decryption, 
+                                        often spread through email attachments or compromised websites.
+                                    </p>
+                                    <div class="alert alert-danger alert-sm">
+                                        <strong>Impact:</strong> Complete data loss possible
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-danger">
+                                        <i class="fas fa-wifi me-2"></i>Public Wi-Fi Attacks
+                                    </h5>
+                                    <p class="card-text">
+                                        Fake Wi-Fi hotspots in public places that intercept user communications, 
+                                        stealing passwords, emails, and other sensitive information.
+                                    </p>
+                                    <div class="alert alert-warning alert-sm">
+                                        <strong>Tip:</strong> Always use VPN on public networks
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protection Tools -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="text-center text-cyber-green mb-4">
+                <i class="fas fa-tools me-2"></i>How CyberGuard Pro Helps Protect You
+            </h3>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="bg-cyber-blue text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <i class="fas fa-link fa-lg"></i>
+                    </div>
+                    <h5 class="card-title">URL Security Checker</h5>
+                    <p class="card-text">
+                        Analyze URLs before visiting to detect phishing sites, malware, and other threats.
+                    </p>
+                    <a href="{{ url_for('url_checker') }}" class="btn btn-cyber-blue">
+                        Check URL Now
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="bg-cyber-purple text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <i class="fas fa-key fa-lg"></i>
+                    </div>
+                    <h5 class="card-title">Password Analysis</h5>
+                    <p class="card-text">
+                        Evaluate password strength and get recommendations to protect against password attacks.
+                    </p>
+                    <a href="{{ url_for('password_checker') }}" class="btn btn-cyber-purple">
+                        Check Password
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="bg-cyber-green text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <i class="fas fa-random fa-lg"></i>
+                    </div>
+                    <h5 class="card-title">Secure Password Generator</h5>
+                    <p class="card-text">
+                        Generate strong, unique passwords that resist brute force and dictionary attacks.
+                    </p>
+                    <a href="{{ url_for('password_generator') }}" class="btn btn-cyber-green">
+                        Generate Password
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info text-center py-4">
+                <h4 class="alert-heading">
+                    <i class="fas fa-graduation-cap me-2"></i>Stay Informed, Stay Protected
+                </h4>
+                <p class="mb-4">
+                    Cybersecurity threats evolve constantly. Regular education and the right tools 
+                    are your best defense against digital threats.
+                </p>
+                <div class="d-flex justify-content-center flex-wrap gap-3">
+                    <a href="{{ url_for('common_measures') }}" class="btn btn-cyber-blue">
+                        <i class="fas fa-shield-alt me-2"></i>Learn Security Measures
+                    </a>
+                    {% if not current_user.is_authenticated %}
+                        <a href="{{ url_for('register') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-user-plus me-2"></i>Join CyberGuard Pro
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

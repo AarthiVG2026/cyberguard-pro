@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Server Error - CyberGuard Pro{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-exclamation-triangle display-1 text-warning mb-4"></i>
+                        <h1 class="display-1 fw-bold text-danger">500</h1>
+                    </div>
+                    
+                    <h2 class="h3 text-muted mb-3">Internal Server Error</h2>
+                    <p class="lead text-muted mb-4">
+                        Something went wrong on our end. Our security team is working to fix this issue. 
+                        Please try again in a few moments.
+                    </p>
+                    
+                    <div class="d-flex justify-content-center flex-wrap gap-3 mb-4">
+                        <a href="{{ url_for('index') }}" class="btn btn-cyber-blue">
+                            <i class="fas fa-home me-2"></i>Go Home
+                        </a>
+                        <button onclick="window.location.reload()" class="btn btn-outline-primary">
+                            <i class="fas fa-redo me-2"></i>Try Again
+                        </button>
+                        <a href="{{ url_for('survey') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-bug me-2"></i>Report Issue
+                        </a>
+                    </div>
+                    
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="alert alert-warning">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Having persistent issues?</strong> 
+                                Please <a href="{{ url_for('survey') }}" class="alert-link">contact our support team</a> 
+                                and we'll help resolve this quickly.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="text-muted">
+                        <small>
+                            <i class="fas fa-clock me-1"></i>
+                            Error occurred at {{ moment().format('YYYY-MM-DD HH:mm:ss UTC') }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

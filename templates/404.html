@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found - CyberGuard Pro{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-search display-1 text-muted mb-4"></i>
+                        <h1 class="display-1 fw-bold text-cyber-blue">404</h1>
+                    </div>
+                    
+                    <h2 class="h3 text-muted mb-3">Page Not Found</h2>
+                    <p class="lead text-muted mb-4">
+                        The page you're looking for doesn't exist or has been moved. 
+                        Don't worry, our security tools are still here to help protect you!
+                    </p>
+                    
+                    <div class="d-flex justify-content-center flex-wrap gap-3 mb-4">
+                        <a href="{{ url_for('index') }}" class="btn btn-cyber-blue">
+                            <i class="fas fa-home me-2"></i>Go Home
+                        </a>
+                        <a href="{{ url_for('url_checker') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-link me-2"></i>Check URL
+                        </a>
+                        <a href="{{ url_for('password_checker') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-key me-2"></i>Check Password
+                        </a>
+                    </div>
+                    
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="alert alert-info">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                <strong>Quick Links:</strong> 
+                                <a href="{{ url_for('about') }}" class="alert-link">About CyberGuard</a> | 
+                                <a href="{{ url_for('cyber_threats') }}" class="alert-link">Learn About Threats</a> | 
+                                <a href="{{ url_for('survey') }}" class="alert-link">Give Feedback</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Register - CyberGuard Pro{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card border-0 shadow-lg auth-card">
+                    <div class="card-header bg-cyber-green text-white text-center py-4">
+                        <h1 class="h3 mb-0">
+                            <i class="fas fa-user-plus me-2"></i>Create Account
+                        </h1>
+                        <p class="mb-0 opacity-75">Join CyberGuard Pro for enhanced security features</p>
+                    </div>
+                    
+                    <div class="card-body p-4">
+                        <form method="POST" class="auth-form">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="username" class="form-label fw-bold">
+                                    <i class="fas fa-user me-2"></i>Username
+                                </label>
+                                <input type="text" 
+                                       class="form-control form-control-lg" 
+                                       id="username" 
+                                       name="username" 
+                                       placeholder="Choose a username" 
+                                       required
+                                       value="{{ request.form.username if request.form.username }}"
+                                       autofocus>
+                                <div class="form-text">Choose a unique username for your account</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label fw-bold">
+                                    <i class="fas fa-envelope me-2"></i>Email Address
+                                </label>
+                                <input type="email" 
+                                       class="form-control form-control-lg" 
+                                       id="email" 
+                                       name="email" 
+                                       placeholder="your@email.com" 
+                                       required
+                                       value="{{ request.form.email if request.form.email }}">
+                                <div class="form-text">We'll never share your email with anyone</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label fw-bold">
+                                <i class="fas fa-lock me-2"></i>Password
+                            </label>
+                            <div class="input-group">
+                                <input type="password" 
+                                       class="form-control form-control-lg" 
+                                       id="password" 
+                                       name="password" 
+                                       placeholder="Create a strong password" 
+                                       required>
+                                <button class="btn btn-outline-secondary" 
+                                        type="button" 
+                                        onclick="togglePasswordVisibility('password', 'eyeIcon1')">
+                                    <i class="fas fa-eye" id="eyeIcon1"></i>
+                                </button>
+                            </div>
+                            <!-- Password strength indicator will be added here by JavaScript -->
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="confirm_password" class="form-label fw-bold">
+                                <i class="fas fa-lock me-2"></i>Confirm Password
+                            </label>
+                            <div class="input-group">
+                                <input type="password" 
+                                       class="form-control form-control-lg" 
+                                       id="confirm_password" 
+                                       name="confirm_password" 
+                                       placeholder="Confirm your password" 
+                                       required>
+                                <button class="btn btn-outline-secondary" 
+                                        type="button" 
+                                        onclick="togglePasswordVisibility('confirm_password', 'eyeIcon2')">
+                                    <i class="fas fa-eye" id="eyeIcon2"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                       type="checkbox" 
+                                       id="terms" 
+                                       required>
+                                <label class="form-check-label" for="terms">
+                                    I agree to the <a href="#" class="text-decoration-none">Terms of Service</a> 
+                                    and <a href="#" class="text-decoration-none">Privacy Policy</a>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-cyber-green btn-lg auth-btn">
+                                <i class="fas fa-user-plus me-2"></i>Create Account
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <p class="mb-2">Already have an account?</p>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login Instead
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Account Benefits -->
+            <div class="card border-0 bg-light mt-4 auth-card">
+                <div class="card-body p-4">
+                    <h5 class="text-cyber-green mb-3">
+                        <i class="fas fa-gift me-2"></i>What You Get With Your Account
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-file-pdf text-primary me-2"></i>
+                                    <strong>Professional Reports:</strong> Download detailed PDF security reports
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-chart-line text-success me-2"></i>
+                                    <strong>Analytics Dashboard:</strong> Track your security improvements over time
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-graduation-cap text-warning me-2"></i>
+                                    <strong>Educational Content:</strong> Learn from detailed mistake analysis
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-history text-info me-2"></i>
+                                    <strong>Security History:</strong> Access to all your previous security checks
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Password confirmation validation
+document.addEventListener('DOMContentLoaded', function() {
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm_password');
+    
+    function validatePassword() {
+        if (password.value !== confirmPassword.value) {
+            confirmPassword.setCustomValidity("Passwords don't match");
+        } else {
+            confirmPassword.setCustomValidity('');
+        }
+    }
+    
+    password.addEventListener('change', validatePassword);
+    confirmPassword.addEventListener('keyup', validatePassword);
+});
+</script>
+{% endblock %}
