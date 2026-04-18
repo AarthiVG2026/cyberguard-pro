@@ -1,0 +1,129 @@
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#000000;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#1a237e;stop-opacity:0.95" />
+      <stop offset="60%" style="stop-color:#0d47a1;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#000000;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00e5ff;stop-opacity:0.4" />
+      <stop offset="50%" style="stop-color:#7c4dff;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#00ff41;stop-opacity:0.2" />
+    </linearGradient>
+    
+    <filter id="crisp-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <pattern id="gridPattern" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+      <rect width="60" height="60" fill="none"/>
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#00e5ff" stroke-width="0.5" opacity="0.15"/>
+      <circle cx="30" cy="30" r="1.5" fill="#00e5ff" opacity="0.2"/>
+    </pattern>
+  </defs>
+  
+  <!-- Main background -->
+  <rect width="1200" height="800" fill="url(#bgGradient)"/>
+  
+  <!-- Matrix pattern overlay -->
+  <rect width="1200" height="800" fill="url(#matrixPattern)" opacity="0.4"/>
+  
+  <!-- Floating geometric shapes -->
+  <g opacity="0.6">
+    <!-- Large hexagon -->
+    <polygon points="100,150 150,120 200,150 200,210 150,240 100,210" 
+             fill="none" stroke="#00e5ff" stroke-width="2" opacity="0.4" filter="url(#glow)">
+      <animateTransform attributeName="transform" type="rotate" 
+                        values="0 150 180;360 150 180" dur="20s" repeatCount="indefinite"/>
+    </polygon>
+    
+    <!-- Medium circuit lines -->
+    <path d="M 300 100 L 500 100 L 500 200 L 600 200 L 600 300" 
+          fill="none" stroke="#7c4dff" stroke-width="1.5" opacity="0.3" filter="url(#glow)">
+      <animate attributeName="stroke-dasharray" values="0 400;400 0" dur="3s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Small floating circles -->
+    <circle cx="800" cy="150" r="30" fill="none" stroke="#00ff41" stroke-width="2" opacity="0.3" filter="url(#glow)">
+      <animate attributeName="r" values="20;40;20" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Security shield outline -->
+    <path d="M 950 100 L 1000 120 L 1050 100 L 1050 200 L 1000 240 L 950 200 Z" 
+          fill="none" stroke="#00e5ff" stroke-width="2" opacity="0.5" filter="url(#glow)">
+      <animate attributeName="opacity" values="0.3;0.7;0.3" dur="2s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Binary code streams -->
+    <text x="50" y="400" font-family="monospace" font-size="12" fill="#00e5ff" opacity="0.2">
+      01001000 01100101 01101100 01101100 01101111
+      <animate attributeName="opacity" values="0.1;0.3;0.1" dur="3s" repeatCount="indefinite"/>
+    </text>
+    
+    <!-- Network nodes -->
+    <g opacity="0.4">
+      <circle cx="200" cy="500" r="8" fill="#7c4dff" filter="url(#glow)"/>
+      <circle cx="400" cy="550" r="6" fill="#00ff41" filter="url(#glow)"/>
+      <circle cx="600" cy="480" r="10" fill="#00e5ff" filter="url(#glow)"/>
+      <line x1="200" y1="500" x2="400" y2="550" stroke="#7c4dff" stroke-width="1" opacity="0.5"/>
+      <line x1="400" y1="550" x2="600" y2="480" stroke="#00ff41" stroke-width="1" opacity="0.5"/>
+    </g>
+    
+    <!-- Scanning lines -->
+    <line x1="0" y1="300" x2="1200" y2="300" stroke="#00e5ff" stroke-width="1" opacity="0.3">
+      <animate attributeName="y1" values="0;800;0" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="0;800;0" dur="8s" repeatCount="indefinite"/>
+    </line>
+    
+    <!-- Digital grid -->
+    <g opacity="0.1">
+      <defs>
+        <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+          <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#00e5ff" stroke-width="1"/>
+        </pattern>
+      </defs>
+      <rect width="1200" height="800" fill="url(#grid)"/>
+    </g>
+    
+    <!-- Lock icon -->
+    <g transform="translate(100,600)">
+      <rect x="10" y="15" width="30" height="25" rx="3" fill="none" stroke="#00e5ff" stroke-width="2" opacity="0.4" filter="url(#glow)"/>
+      <path d="M 15 15 L 15 10 Q 15 5 20 5 L 30 5 Q 35 5 35 10 L 35 15" 
+            fill="none" stroke="#00e5ff" stroke-width="2" opacity="0.4" filter="url(#glow)"/>
+      <circle cx="25" cy="27" r="3" fill="#00e5ff" opacity="0.6"/>
+      <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2s" repeatCount="indefinite"/>
+    </g>
+    
+    <!-- User shield -->
+    <g transform="translate(1000,600)">
+      <path d="M 25 10 L 35 15 L 35 35 L 25 45 L 15 35 L 15 15 Z" 
+            fill="none" stroke="#7c4dff" stroke-width="2" opacity="0.4" filter="url(#glow)"/>
+      <circle cx="25" cy="22" r="5" fill="none" stroke="#7c4dff" stroke-width="1.5" opacity="0.6"/>
+      <path d="M 20 32 Q 25 28 30 32 L 30 38 L 20 38 Z" 
+            fill="none" stroke="#7c4dff" stroke-width="1.5" opacity="0.6"/>
+      <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2.5s" repeatCount="indefinite"/>
+    </g>
+  </g>
+  
+  <!-- Particle effects -->
+  <g opacity="0.3">
+    <circle cx="300" cy="200" r="2" fill="#00e5ff">
+      <animate attributeName="cy" values="200;100;200" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="700" cy="300" r="1.5" fill="#7c4dff">
+      <animate attributeName="cy" values="300;200;300" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="500" cy="400" r="2.5" fill="#00ff41">
+      <animate attributeName="cy" values="400;300;400" dur="5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0" dur="5s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>

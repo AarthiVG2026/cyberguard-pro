@@ -1,0 +1,140 @@
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Clean gradient background -->
+    <linearGradient id="mainBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#000014;stop-opacity:1" />
+      <stop offset="40%" style="stop-color:#1a237e;stop-opacity:0.9" />
+      <stop offset="70%" style="stop-color:#0d47a1;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#000014;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Sharp glow effect -->
+    <filter id="sharpGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Grid pattern -->
+    <pattern id="cleanGrid" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+      <rect width="80" height="80" fill="none"/>
+      <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#00e5ff" stroke-width="0.5" opacity="0.1"/>
+      <circle cx="40" cy="40" r="1" fill="#00e5ff" opacity="0.15"/>
+    </pattern>
+  </defs>
+  
+  <!-- Main background -->
+  <rect width="1920" height="1080" fill="url(#mainBg)"/>
+  
+  <!-- Grid overlay -->
+  <rect width="1920" height="1080" fill="url(#cleanGrid)" opacity="0.4"/>
+  
+  <!-- Central security elements -->
+  <g opacity="0.8">
+    <!-- Main shield -->
+    <g transform="translate(960,540)">
+      <path d="M 0 -100 L 80 -70 L 80 50 L 0 100 L -80 50 L -80 -70 Z" 
+            fill="none" stroke="#00e5ff" stroke-width="2" opacity="0.6" filter="url(#sharpGlow)">
+        <animate attributeName="opacity" values="0.4;0.8;0.4" dur="4s" repeatCount="indefinite"/>
+      </path>
+      
+      <!-- Inner elements -->
+      <circle cx="0" cy="0" r="35" fill="none" stroke="#7c4dff" stroke-width="2" opacity="0.5"/>
+      <polygon points="0,-20 15,10 -15,10" fill="#00ff41" opacity="0.7">
+        <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2.5s" repeatCount="indefinite"/>
+      </polygon>
+      
+      <!-- Security lock -->
+      <g transform="translate(0,15)">
+        <rect x="-8" y="0" width="16" height="12" rx="2" fill="none" stroke="#00e5ff" stroke-width="1.5" opacity="0.6"/>
+        <path d="M -5 0 L -5 -5 Q -5 -8 0 -8 Q 5 -8 5 -5 L 5 0" 
+              fill="none" stroke="#00e5ff" stroke-width="1.5" opacity="0.6"/>
+      </g>
+    </g>
+    
+    <!-- Corner circuit elements -->
+    <g opacity="0.5">
+      <!-- Top left -->
+      <path d="M 150 150 L 300 150 L 300 250 L 400 250" 
+            fill="none" stroke="#00e5ff" stroke-width="2" stroke-dasharray="15,5">
+        <animate attributeName="stroke-dashoffset" values="0;20" dur="3s" repeatCount="indefinite"/>
+      </path>
+      <circle cx="150" cy="150" r="6" fill="#00e5ff" filter="url(#sharpGlow)"/>
+      <circle cx="400" cy="250" r="8" fill="#7c4dff" filter="url(#sharpGlow)"/>
+      
+      <!-- Top right -->
+      <path d="M 1770 150 L 1620 150 L 1620 250 L 1520 250" 
+            fill="none" stroke="#7c4dff" stroke-width="2" stroke-dasharray="15,5">
+        <animate attributeName="stroke-dashoffset" values="0;20" dur="3.5s" repeatCount="indefinite"/>
+      </path>
+      <circle cx="1770" cy="150" r="6" fill="#7c4dff" filter="url(#sharpGlow)"/>
+      <circle cx="1520" cy="250" r="8" fill="#00ff41" filter="url(#sharpGlow)"/>
+      
+      <!-- Bottom left -->
+      <path d="M 150 930 L 300 930 L 300 830 L 400 830" 
+            fill="none" stroke="#00ff41" stroke-width="2" stroke-dasharray="15,5">
+        <animate attributeName="stroke-dashoffset" values="0;20" dur="4s" repeatCount="indefinite"/>
+      </path>
+      <circle cx="150" cy="930" r="6" fill="#00ff41" filter="url(#sharpGlow)"/>
+      <circle cx="400" cy="830" r="8" fill="#00e5ff" filter="url(#sharpGlow)"/>
+      
+      <!-- Bottom right -->
+      <path d="M 1770 930 L 1620 930 L 1620 830 L 1520 830" 
+            fill="none" stroke="#00e5ff" stroke-width="2" stroke-dasharray="15,5">
+        <animate attributeName="stroke-dashoffset" values="0;20" dur="2.5s" repeatCount="indefinite"/>
+      </path>
+      <circle cx="1770" cy="930" r="6" fill="#00e5ff" filter="url(#sharpGlow)"/>
+      <circle cx="1520" cy="830" r="8" fill="#7c4dff" filter="url(#sharpGlow)"/>
+    </g>
+    
+    <!-- Data flow indicators -->
+    <g opacity="0.4">
+      <!-- Left side -->
+      <rect x="100" y="450" width="150" height="3" fill="#00e5ff" opacity="0.6">
+        <animate attributeName="width" values="50;150;50" dur="4s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="100" y="470" width="120" height="3" fill="#7c4dff" opacity="0.5">
+        <animate attributeName="width" values="30;120;30" dur="3s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="100" y="490" width="180" height="3" fill="#00ff41" opacity="0.7">
+        <animate attributeName="width" values="40;180;40" dur="5s" repeatCount="indefinite"/>
+      </rect>
+      
+      <!-- Right side -->
+      <rect x="1670" y="590" width="150" height="3" fill="#7c4dff" opacity="0.6">
+        <animate attributeName="width" values="50;150;50" dur="4.5s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="1670" y="610" width="120" height="3" fill="#00ff41" opacity="0.5">
+        <animate attributeName="width" values="30;120;30" dur="3.5s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="1670" y="630" width="180" height="3" fill="#00e5ff" opacity="0.7">
+        <animate attributeName="width" values="40;180;40" dur="5.5s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+    
+    <!-- Scanning line -->
+    <line x1="0" y1="540" x2="1920" y2="540" stroke="#00e5ff" stroke-width="1" opacity="0.15">
+      <animate attributeName="opacity" values="0;0.3;0" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="y1" values="200;880;200" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="200;880;200" dur="6s" repeatCount="indefinite"/>
+    </line>
+  </g>
+  
+  <!-- Minimal particle effects -->
+  <g opacity="0.3">
+    <circle cx="400" cy="300" r="2" fill="#00e5ff">
+      <animate attributeName="cy" values="300;200;300" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.6;0" dur="8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1520" cy="780" r="1.5" fill="#7c4dff">
+      <animate attributeName="cy" values="780;680;780" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.5;0" dur="6s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="960" cy="200" r="2.5" fill="#00ff41">
+      <animate attributeName="cy" values="200;100;200" dur="10s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.4;0" dur="10s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>
