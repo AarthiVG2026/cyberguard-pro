@@ -92,4 +92,5 @@ This project was built with a focus on **speed, security, and scalability**.
 
 ---
 
-*Prepared with care by a developer who cares about secure code.*
+*Prepared with care by a developer who cares about secure code.
+Developed by AARTHI V G*
