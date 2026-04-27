@@ -219,8 +219,8 @@ This project is proprietary. All rights reserved.
 
 ![AI Phishing Scanner](./static/assets/screenshots/ai_phishing_scanner.png)
 
-**PASSWORD STRENGTH CHECKER
-**
+**PASSWORD STRENGTH CHECKER**
+
 ![Password Strength Checker](./static/assets/screenshots/password_strength_checker.png)
 
 **Dashboard**
