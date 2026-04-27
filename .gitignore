@@ -1,0 +1,34 @@
+# Environments
+.env
+.venv
+venv/
+venv
+ENV/
+env.bak/
+venv.bak/
+.local/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Database
+*.db
+instance/
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+
+# Logs and debug files
+logs/
+*.log
+debug_output.txt
+error_test.txt
+start.log
+
+# Scratch and arbitrary scripts
+scratch/
+attached_assets/
