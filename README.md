@@ -5,6 +5,15 @@ CyberGuard Pro is an advanced, AI-powered web application designed to protect us
 
 ---
 
+
+## 📸 Screenshots & Demo
+**🎥 Video Demo:**
+[Watch on YouTube](https://youtu.be/8vwuOtdhI9Y)
+
+![App Working Demo](./static/assets/screenshots/app_working_demo.gif)
+
+
+
 ## 🚀 Key Features
 
 *   **🤖 AI-Powered URL Scanner (Phishing Detection)**
@@ -205,13 +214,6 @@ All scans and URL analysis metrics are logged locally within the database to pow
 This project is proprietary. All rights reserved.
 
 ---
-
-## 📸 Screenshots & Demo
-**🎥 Video Demo:**
-[Watch on YouTube](https://youtu.be/8vwuOtdhI9Y)
-
-![App Working Demo](./static/assets/screenshots/app_working_demo.gif)
-
 
 **Features**
 
