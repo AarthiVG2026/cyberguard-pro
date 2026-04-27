@@ -207,12 +207,17 @@ This project is proprietary. All rights reserved.
 ---
 
 ## 📸 Screenshots & Demo
-**🎥 Video Demo:** [Watch on YouTube](https://youtu.be/8vwuOtdhI9Y)
+**🎥 Video Demo:**
+[Watch on YouTube](https://youtu.be/8vwuOtdhI9Y)
 
 ![App Working Demo](./static/assets/screenshots/app_working_demo.gif)
 
+
 **Features**
+
 ![AI Phishing Scanner](./static/assets/screenshots/ai_phishing_scanner.png)
+
+
 ![Password Strength Checker](./static/assets/screenshots/password_strength_checker.png)
 
 **Dashboard**
@@ -222,4 +227,7 @@ This project is proprietary. All rights reserved.
 
 ## 🧠 Final Note
 
-CyberGuard Pro demonstrates an enterprise-grade, production-ready cybersecurity architecture by combining rule-based forensics, machine learning prediction, and generative AI into a unified, scalable platform designed for real-world threat detection.
+CyberGuard Pro demonstrates an enterprise-grade, production-ready cybersecurity architecture by combining rule-based forensics, machine learning prediction, and generative AI into a unified, scalable platform designed for real-world threat detection. 
+
+**Developed By AARTHI V G**
+                                                                                              
