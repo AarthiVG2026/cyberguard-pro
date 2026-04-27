@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white d-flex align-items-center">
+                <i class="fas fa-robot fa-2x me-3"></i>
+                <h3 class="mb-0">CyberGuard Pro - AI Phishing Scanner</h3>
+            </div>
+            
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <p class="lead mb-0">
+                            Analyze any URL using our state-of-the-art Machine Learning model and Explainable AI.
+                        </p>
+                        <span class="badge bg-warning text-dark p-2 animate-pulse">
+                            <i class="fas fa-star me-1"></i>Project Star: 98.4% Accuracy
+                        </span>
+                    </div>
+                    
+                    <div class="alert alert-info border-0 bg-opacity-10 py-2">
+                        <small><i class="fas fa-microchip me-2"></i>Technology: Random Forest Classifier + Shannon Entropy Analysis</small>
+                    </div>
+                
+                <form id="aiScanForm" class="mb-4">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-light"><i class="fas fa-link"></i></span>
+                        <input type="url" id="urlInput" class="form-control" placeholder="https://example.com" required>
+                        <button type="submit" class="btn btn-primary" id="analyzeBtn">
+                            <i class="fas fa-search me-2"></i>Analyze
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Loading State -->
+                <div id="loadingIndicator" class="text-center d-none my-5">
+                    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <h5 class="mt-3 text-muted">AI is analyzing the URL...</h5>
+                </div>
+                
+                <!-- Results Container -->
+                <div id="resultsContainer" class="d-none">
+                    <hr>
+                    <div class="row mt-4">
+                        <!-- Left Column: Prediction -->
+                            <div class="card h-100 border-0 shadow-lg text-white" id="predictionCard" 
+                                 style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); transition: all 0.5s ease;">
+                                <div class="card-body text-center d-flex flex-column justify-content-center py-5">
+                                    <div id="predictionStatus" class="h3 text-uppercase fw-light tracking-widest">
+                                        <i class="fas fa-microchip me-2"></i> AI VERDICT
+                                    </div>
+                                    <div class="my-4">
+                                        <h1 class="display-1 fw-black my-2" id="confidenceScore" style="text-shadow: 0 0 20px rgba(255,255,255,0.2);">0%</h1>
+                                    </div>
+                                    <div class="text-uppercase small fw-bold" id="confidenceLabel" style="letter-spacing: 2px; color: #94a3b8;">Phishing Risk Probability</div>
+                                </div>
+                            </div>
+                        
+                        <!-- Right Column: AI Explanation & Factors -->
+                        <div class="col-md-7">
+                            <div class="card h-100 border-0 shadow-sm bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary"><i class="fas fa-brain me-2"></i>AI Explanation</h5>
+                                    <p class="card-text fs-5" id="aiExplanation"></p>
+                                    
+                                    <h5 class="card-title text-primary mt-4"><i class="fas fa-chart-bar me-2"></i>Top Risk Factors</h5>
+                                    <ul class="list-group list-group-flush rounded" id="topFactorsList">
+                                        <!-- Factors injected here -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Raw Feature Analysis -->
+                    <div class="mt-4">
+                        <h5 class="text-secondary"><i class="fas fa-code me-2"></i>Extracted Numerical Features</h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered mt-2">
+                                <tbody id="featuresTableBody">
+                                    <!-- Features injected here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('aiScanForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const url = document.getElementById('urlInput').value;
+    if (!url) return;
+    
+    // UI states
+    const btn = document.getElementById('analyzeBtn');
+    const loading = document.getElementById('loadingIndicator');
+    const results = document.getElementById('resultsContainer');
+    
+    btn.disabled = true;
+    loading.classList.remove('d-none');
+    results.classList.add('d-none');
+    
+    try {
+        const response = await fetch('/analyze-url', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ url: url })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        
+        // 1. Setup Prediction UI
+        const predCard = document.getElementById('predictionCard');
+        const predStatus = document.getElementById('predictionStatus');
+        const confScore = document.getElementById('confidenceScore');
+        const confLabel = document.getElementById('confidenceLabel');
+        
+        // Use the display score and label from backend
+        confScore.innerText = `${data.display_score}/100`;
+        confLabel.innerText = data.display_label;
+        
+        if (data.prediction === 'safe') {
+            predCard.style.background = 'linear-gradient(135deg, #065f46 0%, #10b981 100%)';
+            predStatus.innerHTML = '<i class="fas fa-check-circle me-2"></i> VERIFIED SAFE';
+        } else {
+            predCard.style.background = 'linear-gradient(135deg, #991b1b 0%, #ef4444 100%)';
+            predStatus.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i> PHISHING DETECTED';
+        }
+        
+        // 2. Update Feature Table
+        const featureBody = document.getElementById('featuresTableBody');
+        featureBody.innerHTML = '';
+        
+        const features = data.features;
+        const details = data.details;
+        
+        // Special handling for domain age to avoid showing 0 on error
+        let domainAgeDisplay = features['domain_age_days'];
+        if (domainAgeDisplay === null || domainAgeDisplay === undefined) {
+            domainAgeDisplay = '<span class="text-warning">Unknown (Redacted)</span>';
+        } else if (domainAgeDisplay < 0) {
+            domainAgeDisplay = '<span class="text-danger">0 (Newly Registered)</span>';
+        } else if (domainAgeDisplay > 365) {
+            const years = Math.floor(domainAgeDisplay / 365);
+            const remainingDays = domainAgeDisplay % 365;
+            domainAgeDisplay = `${years} years, ${remainingDays} days (${domainAgeDisplay} total)`;
+        } else {
+            domainAgeDisplay = domainAgeDisplay + ' days';
+        }
+        
+        const displayFeatures = {
+            'Domain Age': domainAgeDisplay,
+            'SSL Valid': features['ssl_valid'] ? 'YES' : 'NO',
+            'URL Length': features['url_length'],
+            'Domain Length': features['domain_length'],
+            'Num Dots': features['num_dots'],
+            'Num Hyphens': features['num_hyphens'],
+            'Num Subdomains': features['num_subdomains'],
+            'Domain Entropy': features['domain_entropy'] ? features['domain_entropy'].toFixed(2) : '0',
+            'Suspicious Words': features['suspicious_words_count'] || 0,
+            'Is IP': features['is_ip'] ? 'YES' : 'NO',
+            'Has HTTPS': features['has_https'] ? 'YES' : 'NO',
+            'Typo Score': features['typo_score'] || 0,
+            'Contains @': features['contains_at'] ? 'YES' : 'NO'
+        };
+
+        const keys = Object.keys(displayFeatures);
+        
+        for (let i = 0; i < keys.length; i += 2) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <th class="bg-light fw-bold" style="width: 30%">${keys[i]}</th>
+                <td style="width: 20%">${displayFeatures[keys[i]]}</td>
+                <th class="bg-light fw-bold" style="width: 30%">${keys[i+1] || ''}</th>
+                <td style="width: 20%">${keys[i+1] ? displayFeatures[keys[i+1]] : ''}</td>
+            `;
+            featureBody.appendChild(row);
+        }
+        
+        // 2. Setup AI Explanation (Rendered via Marked.js)
+        document.getElementById('aiExplanation').innerHTML = marked.parse(data.explanation);
+        
+        // 3. Remove old technical list if LLM covers it (Simplification as per user request)
+        document.getElementById('topFactorsList').innerHTML = '<li class="list-group-item text-muted small">Refer to Enterprise AI Assessment above for risk details.</li>';
+        
+        // Make results visible immediately after data is processed
+        results.classList.remove('d-none');
+        results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+    } catch (err) {
+        console.error("AI Analysis Error:", err);
+        alert("Failed to analyze URL. " + err.message);
+    } finally {
+        btn.disabled = false;
+        loading.classList.add('d-none');
+    }
+});
+</script>
+{% endblock %}

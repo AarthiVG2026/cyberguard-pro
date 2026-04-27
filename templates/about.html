@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}About CyberGuard Pro - Cybersecurity Analysis Platform{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <div class="card border-0 bg-gradient bg-cyber-blue text-white">
+                <div class="card-body py-5">
+                    <i class="fas fa-shield-alt display-1 mb-4 opacity-75"></i>
+                    <h1 class="display-4 fw-bold mb-3">About CyberGuard Pro</h1>
+                    <p class="lead mb-0">Your comprehensive cybersecurity analysis platform for the modern digital world</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mission Section -->
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-5">
+                    <div class="row align-items-center">
+                        <div class="col-lg-5 text-center mb-4 mb-lg-0">
+                            <img src="{{ url_for('static', filename='images/security-team.svg') }}" 
+                                 alt="Security Team" 
+                                 class="img-fluid" 
+                                 style="max-height: 250px; filter: brightness(1.1);">
+                        </div>
+                        <div class="col-lg-7">
+                            <h2 class="text-cyber-blue mb-4">
+                                <i class="fas fa-bullseye me-2"></i>Our Mission
+                            </h2>
+                            <p class="lead">
+                                CyberGuard Pro is dedicated to making cybersecurity accessible, understandable, and actionable for everyone. 
+                                We believe that robust digital security shouldn't require a degree in computer science.
+                            </p>
+                            <p>
+                                Our platform provides comprehensive security analysis tools that help individuals and organizations 
+                                identify vulnerabilities, understand threats, and implement best practices to protect their digital assets.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center text-cyber-purple mb-5">
+                <i class="fas fa-star me-2"></i>Platform Features
+            </h2>
+        </div>
+        
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="bg-cyber-blue text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="fas fa-link fa-2x"></i>
+                    </div>
+                    <h5 class="card-title text-cyber-blue">Advanced URL Analysis</h5>
+                    <p class="card-text">
+                        Our comprehensive URL checker analyzes websites for phishing attempts, malware, 
+                        SSL certificate validity, domain reputation, and security threats using advanced algorithms.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="bg-cyber-purple text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="fas fa-key fa-2x"></i>
+                    </div>
+                    <h5 class="card-title text-cyber-purple">Password Security Analysis</h5>
+                    <p class="card-text">
+                        Comprehensive password strength evaluation including entropy calculation, 
+                        pattern detection, dictionary checking, and personalized improvement recommendations.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="bg-cyber-green text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="fas fa-random fa-2x"></i>
+                    </div>
+                    <h5 class="card-title text-cyber-green">Secure Password Generation</h5>
+                    <p class="card-text">
+                        Generate cryptographically secure passwords with customizable parameters, 
+                        ensuring maximum entropy and compliance with security best practices.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Features for Registered Users -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-0 bg-light">
+                <div class="card-body p-5">
+                    <h3 class="text-cyber-orange mb-4 text-center">
+                        <i class="fas fa-crown me-2"></i>Premium Features for Registered Users
+                    </h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="text-cyber-blue mb-3">
+                                <i class="fas fa-file-download me-2"></i>Professional Reports
+                            </h5>
+                            <p class="mb-4">
+                                Download comprehensive PDF and CSV reports with detailed analysis, 
+                                security recommendations, and professional formatting suitable for compliance documentation.
+                            </p>
+                            
+                            <h5 class="text-cyber-blue mb-3">
+                                <i class="fas fa-microscope me-2"></i>Detailed Mistake Analysis
+                            </h5>
+                            <p class="mb-4">
+                                Get in-depth explanations of security vulnerabilities, understand why certain 
+                                patterns are dangerous, and learn how to avoid similar issues in the future.
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="text-cyber-blue mb-3">
+                                <i class="fas fa-chart-line me-2"></i>Security History Dashboard
+                            </h5>
+                            <p class="mb-4">
+                                Track your security improvements over time with detailed analytics, 
+                                historical data visualization, and progress monitoring tools.
+                            </p>
+                            
+                            <h5 class="text-cyber-blue mb-3">
+                                <i class="fas fa-graduation-cap me-2"></i>Educational Content
+                            </h5>
+                            <p class="mb-4">
+                                Access personalized security guidance, learn from your mistakes with 
+                                tailored educational content, and stay updated on latest security practices.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technology Section -->
+    <div class="row mb-5">
+        <div class="col-lg-10 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-5">
+                    <h2 class="text-cyber-purple mb-4 text-center">
+                        <i class="fas fa-cogs me-2"></i>Technology & Security
+                    </h2>
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h6 class="text-cyber-blue">Security-First Design</h6>
+                            <p class="text-muted mb-3">
+                                Our platform is built with security as the foundation. All data is encrypted, 
+                                passwords are never stored in plain text, and we follow industry best practices.
+                            </p>
+                            
+                            <h6 class="text-cyber-blue">Real-Time Analysis</h6>
+                            <p class="text-muted mb-3">
+                                Advanced algorithms provide instant security analysis with up-to-date threat intelligence 
+                                and machine learning-powered pattern recognition.
+                            </p>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <img src="{{ url_for('static', filename='images/cyber-background.svg') }}" 
+                                 alt="Cyber Technology" 
+                                 class="img-fluid" 
+                                 style="max-height: 200px; filter: brightness(1.1) hue-rotate(30deg);">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                        <div class="col-md-6">
+                            <h6 class="text-cyber-blue">Privacy Protection</h6>
+                            <p class="text-muted mb-3">
+                                We prioritize your privacy. Analysis is performed locally when possible, 
+                                and we never store or share your sensitive data without explicit consent.
+                            </p>
+                            
+                            <h6 class="text-cyber-blue">Continuous Updates</h6>
+                            <p class="text-muted mb-3">
+                                Our threat database and analysis algorithms are continuously updated to address 
+                                emerging cybersecurity threats and attack vectors.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 bg-gradient bg-cyber-green text-white text-center">
+                <div class="card-body py-5">
+                    <h3 class="mb-3">Ready to Enhance Your Digital Security?</h3>
+                    <p class="lead mb-4">
+                        Join thousands of users who trust CyberGuard Pro to protect their digital lives.
+                    </p>
+                    <div class="d-flex justify-content-center flex-wrap gap-3">
+                        {% if not current_user.is_authenticated %}
+                            <a href="{{ url_for('web.register') }}" class="btn btn-light btn-lg">
+                                <i class="fas fa-user-plus me-2"></i>Get Started Free
+                            </a>
+                            <a href="{{ url_for('web.url_checker') }}" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-link me-2"></i>Try URL Checker
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('web.dashboard') }}" class="btn btn-light btn-lg">
+                                <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                            </a>
+                            <a href="{{ url_for('web.password_generator') }}" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-random me-2"></i>Generate Password
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

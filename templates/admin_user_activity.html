@@ -1,0 +1,336 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - User Activity: {{ user.username }} - CyberGuard Pro{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-user-cog me-2"></i>User Activity: {{ user.username }}</h1>
+        <a href="{{ url_for('web.dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+        </a>
+    </div>
+    
+    <!-- User Info Card -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-user me-2"></i>User Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>Username:</strong> {{ user.username }}
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Email:</strong> {{ user.email }}
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Type:</strong> 
+                            {% if user.is_admin %}
+                                <span class="badge bg-primary">Admin</span>
+                            {% else %}
+                                <span class="badge bg-secondary">User</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Status:</strong> 
+                            {% if user.is_blocked %}
+                                <span class="badge bg-danger">Blocked</span>
+                            {% else %}
+                                <span class="badge bg-success">Active</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <strong>Joined:</strong> {{ user.created_at.strftime('%Y-%m-%d %H:%M') }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Last Login:</strong> 
+                            {% if user.last_login %}
+                                {{ user.last_login.strftime('%Y-%m-%d %H:%M') }}
+                            {% else %}
+                                Never
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Summary -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">{{ url_checks|length }}</h5>
+                    <p class="card-text">URL Checks</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title text-success">{{ password_checks|length }}</h5>
+                    <p class="card-text">Password Checks</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title text-info">{{ generated_passwords|length }}</h5>
+                    <p class="card-text">Generated Passwords</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    {% if not user.is_admin %}
+                        <button class="btn btn-sm btn-outline-danger" onclick="toggleUserStatus({{ user.id }}, '{{ user.username }}')">
+                            {% if user.is_blocked %}
+                                <i class="fas fa-unlock me-1"></i>Unblock
+                            {% else %}
+                                <i class="fas fa-lock me-1"></i>Block
+                            {% endif %}
+                        </button>
+                    {% else %}
+                        <span class="text-muted">Admin User</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Phishing Checks -->
+    <div class="card mb-4 border-info">
+        <div class="card-header bg-info text-white">
+            <h5><i class="fas fa-brain me-2"></i>AI Machine Learning Checks ({{ user.ai_scans|length }})</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>URL</th>
+                            <th>AI Prediction</th>
+                            <th>AI Confidence</th>
+                            <th>Checked At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for scan in user.ai_scans %}
+                        <tr>
+                            <td class="text-truncate" style="max-width: 300px;">{{ scan.url }}</td>
+                            <td>
+                                {% if scan.prediction == 'phishing' %}
+                                    <span class="badge bg-danger">Phishing</span>
+                                {% else %}
+                                    <span class="badge bg-success">Safe</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ (scan.confidence * 100)|round(1) }}%</td>
+                            <td>{{ scan.checked_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center py-3 text-muted">No AI scans performed by this user.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- URL Checks -->
+    {% if url_checks %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5><i class="fas fa-link me-2"></i>URL Security Checks ({{ url_checks|length }})</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>URL</th>
+                            <th>Security Score</th>
+                            <th>Status</th>
+                            <th>Checked At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for check in url_checks %}
+                        <tr>
+                            <td>
+                                <small>{{ check.url[:50] }}{% if check.url|length > 50 %}...{% endif %}</small>
+                            </td>
+                            <td>
+                                <div class="progress" style="height: 20px;">
+                                    <div class="progress-bar 
+                                        {% if check.security_score >= 70 %}bg-success
+                                        {% elif check.security_score >= 40 %}bg-warning
+                                        {% else %}bg-danger{% endif %}" 
+                                        role="progressbar" 
+                                        style="width: {{ check.security_score }}%">
+                                        {{ check.security_score }}%
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                {% if check.security_score >= 70 %}
+                                    <span class="badge bg-success">Safe</span>
+                                {% elif check.security_score >= 40 %}
+                                    <span class="badge bg-warning">Suspicious</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Dangerous</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ check.checked_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Password Checks -->
+    {% if password_checks %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5><i class="fas fa-key me-2"></i>Password Security Checks ({{ password_checks|length }})</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Strength Score</th>
+                            <th>Strength Level</th>
+                            <th>Character Types</th>
+                            <th>Checked At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for check in password_checks %}
+                        <tr>
+                            <td>
+                                <div class="progress" style="height: 20px;">
+                                    <div class="progress-bar 
+                                        {% if check.strength_score >= 80 %}bg-success
+                                        {% elif check.strength_score >= 60 %}bg-warning
+                                        {% else %}bg-danger{% endif %}" 
+                                        role="progressbar" 
+                                        style="width: {{ check.strength_score }}%">
+                                        {{ check.strength_score }}%
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge 
+                                    {% if check.strength_level == 'Very Strong' %}bg-success
+                                    {% elif check.strength_level == 'Strong' %}bg-primary
+                                    {% elif check.strength_level == 'Moderate' %}bg-warning
+                                    {% else %}bg-danger{% endif %}">
+                                    {{ check.strength_level }}
+                                </span>
+                            </td>
+                            <td>
+                                <small>
+                                    {% if check.has_uppercase %}<span class="badge bg-secondary">A-Z</span>{% endif %}
+                                    {% if check.has_lowercase %}<span class="badge bg-secondary">a-z</span>{% endif %}
+                                    {% if check.has_numbers %}<span class="badge bg-secondary">0-9</span>{% endif %}
+                                    {% if check.has_symbols %}<span class="badge bg-secondary">!@#</span>{% endif %}
+                                </small>
+                            </td>
+                            <td>{{ check.checked_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Generated Passwords -->
+    {% if generated_passwords %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5><i class="fas fa-random me-2"></i>Generated Passwords ({{ generated_passwords|length }})</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Length</th>
+                            <th>Character Types</th>
+                            <th>Purpose</th>
+                            <th>Generated At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pwd in generated_passwords %}
+                        <tr>
+                            <td>{{ pwd.length }}</td>
+                            <td>
+                                <small>
+                                    {% if pwd.include_uppercase %}<span class="badge bg-secondary">A-Z</span>{% endif %}
+                                    {% if pwd.include_lowercase %}<span class="badge bg-secondary">a-z</span>{% endif %}
+                                    {% if pwd.include_numbers %}<span class="badge bg-secondary">0-9</span>{% endif %}
+                                    {% if pwd.include_symbols %}<span class="badge bg-secondary">!@#</span>{% endif %}
+                                </small>
+                            </td>
+                            <td>{{ pwd.usage_purpose or 'General' }}</td>
+                            <td>{{ pwd.generated_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if not url_checks and not password_checks and not generated_passwords %}
+    <div class="alert alert-info text-center">
+        <i class="fas fa-info-circle me-2"></i>
+        No activity found for this user.
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function toggleUserStatus(userId, username) {
+    if (confirm(`Are you sure you want to block/unblock user "${username}"?`)) {
+        fetch(`/admin/toggle-user-status/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while updating user status.');
+        });
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,866 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - CyberGuard Pro{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    {% if current_user.is_admin %}
+        <!-- Admin Dashboard -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="display-5 fw-bold admin-text-yellow mb-2">
+                            <i class="fas fa-tachometer-alt me-3"></i>Admin Dashboard
+                        </h1>
+                        <p class="lead text-muted">Platform Overview & User Management</p>
+                    </div>
+                    <div>
+                        <div class="btn-group" role="group">
+                            <a href="{{ url_for('web.admin_download_users') }}" class="btn btn-cyber-blue">
+                                <i class="fas fa-users me-2"></i>Download Users
+                            </a>
+                            <a href="{{ url_for('web.admin_download_activity') }}" class="btn btn-cyber-green">
+                                <i class="fas fa-chart-line me-2"></i>Download Activity
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Statistics -->
+        <div class="row mb-5">
+            <div class="col-md-3 mb-3">
+                <div class="admin-stat-card border-left-primary">
+                    <div class="stat-icon text-cyber-blue">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-number">{{ stats.total_users }}</div>
+                    <div class="stat-label">Total Users</div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-3">
+                <div class="admin-stat-card border-left-success">
+                    <div class="stat-icon text-cyber-green">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <div class="stat-number">{{ stats.total_url_checks }}</div>
+                    <div class="stat-label">URL Checks</div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-3">
+                <div class="admin-stat-card border-left-info">
+                    <div class="stat-icon text-cyber-purple">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div class="stat-number">{{ stats.total_password_checks }}</div>
+                    <div class="stat-label">Password Checks</div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-3">
+                <div class="admin-stat-card border-left-danger">
+                    <div class="stat-icon text-cyber-red">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="stat-number">{{ stats.total_ai_scans }}</div>
+                    <div class="stat-label">AI Phishing Scans</div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-3">
+                <div class="admin-stat-card border-left-warning">
+                    <div class="stat-icon text-cyber-orange">
+                        <i class="fas fa-random"></i>
+                    </div>
+                    <div class="stat-number">{{ stats.total_generated_passwords }}</div>
+                    <div class="stat-label">Generated Passwords</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Charts -->
+        <div class="row mb-5">
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-cyber-blue text-white">
+                        <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>URL Safety Distribution</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="urlSafetyChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-cyber-green text-white">
+                        <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Activity Trends</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="activityChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Management -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-cyber-blue text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-users me-2"></i>User Management</h5>
+                        <div class="btn-group" role="group">
+                            <a href="{{ url_for('web.admin_download_users', format='pdf') }}" class="btn btn-sm btn-light btn-sm-black">
+                                <i class="fas fa-file-pdf me-1"></i>PDF
+                            </a>
+                            <a href="{{ url_for('web.admin_download_users', format='csv') }}" class="btn btn-sm btn-light btn-sm-black">
+                                <i class="fas fa-file-csv me-1"></i>CSV
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                        <th>Joined</th>
+                                        <th>Last Login</th>
+                                        <th>Activity</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in all_users[:20] %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ user.username }}</strong>
+                                            {% if user.is_admin %}
+                                                <span class="badge bg-danger ms-1">Admin</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+                                        <td>{{ user.last_login.strftime('%Y-%m-%d %H:%M') if user.last_login else 'Never' }}</td>
+                                        <td>
+                                            <small class="text-muted">
+                                                URLs: {{ user.url_checks|length }}, 
+                                                Passwords: {{ user.password_checks|length }}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a href="{{ url_for('web.admin_user_activity', user_id=user.id) }}" 
+                                                   class="btn btn-outline-primary" title="View Activity">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                {% if not user.is_admin %}
+                                                <button class="btn btn-outline-warning" 
+                                                        onclick="toggleUserStatus({{ user.id }}, '{{ user.username }}')" 
+                                                        title="Block/Unblock User">
+                                                    <i class="fas fa-ban"></i>
+                                                </button>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- User Feedback Management -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-cyber-purple text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-comment-dots me-2"></i>User Feedback Management</h5>
+                        <div class="btn-group" role="group">
+                            <a href="{{ url_for('web.admin_download_users', format='pdf') }}" class="btn btn-sm btn-light btn-sm-black">
+    <i class="fas fa-file-pdf me-1"></i>PDF
+</a>
+
+                            <a href="{{ url_for('web.admin_download_feedback', format='csv') }}" class="btn btn-sm btn-light btn-sm-black">
+                                <i class="fas fa-file-csv me-1"></i>CSV
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Experience</th>
+                                        <th>Primary Concern</th>
+                                        <th>Rating</th>
+                                        <th>Status</th>
+                                        <th>Submitted</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for feedback in recent_feedback %}
+<tr class="table-feedback">
+    <td><strong>{{ feedback.name }}</strong></td>
+    <td>{{ feedback.email }}</td>
+    <td>
+        <span class="badge bg-{{ 'success' if feedback.experience_level == 'Expert' else 'primary' if feedback.experience_level == 'Intermediate' else 'secondary' }}">
+            {{ feedback.experience_level }}
+        </span>
+    </td>
+    <td>{{ feedback.primary_concern }}</td>
+    <td>
+        <div class="text-warning">
+            {% for i in range(feedback.satisfaction_rating or 0) %}
+                <i class="fas fa-star"></i>
+            {% endfor %}
+            {% for i in range(5 - (feedback.satisfaction_rating or 0)) %}
+                <i class="far fa-star"></i>
+            {% endfor %}
+        </div>
+    </td>
+    <td>
+        {% if feedback.is_reviewed %}
+            <span class="badge bg-success">Reviewed</span>
+        {% else %}
+            <span class="badge bg-warning">Pending</span>
+        {% endif %}
+    </td>
+    <td>{{ feedback.submitted_at.strftime('%Y-%m-%d %H:%M') }}</td>
+    <td>
+        <div class="btn-group btn-group-sm" role="group">
+            <button class="btn btn-outline-light" onclick="viewFeedback({{ feedback.id }})" title="View Details">
+                <i class="fas fa-eye"></i>
+            </button>
+            {% if not feedback.is_reviewed %}
+            <button class="btn btn-outline-light" onclick="markReviewed({{ feedback.id }})" title="Mark as Reviewed">
+                <i class="fas fa-check"></i>
+            </button>
+            {% endif %}
+        </div>
+    </td>
+</tr>
+{% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent AI Phishing Analyses -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card card-star shadow-lg">
+                    <div class="card-header bg-dark text-warning d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-star me-2"></i>Core Project Star: Recent AI Phishing Analyses</h5>
+                        <span class="badge bg-warning text-dark">ML POWERED</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Target URL</th>
+                                        <th>AI Prediction</th>
+                                        <th>Confidence</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for scan in recent_ai_scans %}
+                                    <tr>
+                                        <td>{{ scan.user.username if scan.user else 'Guest' }}</td>
+                                        <td class="text-truncate" style="max-width: 350px;">{{ scan.url }}</td>
+                                        <td>
+                                            {% if scan.risk_level == 'High' or scan.risk_level == 'Medium' %}
+                                                <span class="badge bg-danger rounded-pill px-3">Risk detected</span>
+                                            {% else %}
+                                                <span class="badge bg-success rounded-pill px-3">Safe</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="fw-bold text-{{ 'danger' if scan.final_risk_score > 50 else 'success' }}">
+                                                {{ scan.final_risk_score|round(1) }}%
+                                            </div>
+                                        </td>
+                                        <td>{{ scan.checked_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4 text-muted">No AI scans identified yet.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-cyber-green text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Recent Security Activity</h5>
+                        <div class="btn-group" role="group">
+                            <a href="{{ url_for('web.admin_download_activity', format='pdf') }}" class="btn btn-sm btn-light btn-sm-black">
+                                <i class="fas fa-file-pdf me-1"></i>PDF
+                            </a>
+                            <a href="{{ url_for('web.admin_download_activity', format='csv') }}" class="btn btn-sm btn-light btn-sm-black">
+                                <i class="fas fa-file-csv me-1"></i>CSV
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Activity Type</th>
+                                        <th>Details</th>
+                                        <th>Result</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for check in recent_url_checks %}
+                                    <tr>
+                                        <td>{{ check.user.username if check.user else 'Anonymous' }}</td>
+                                        <td><span class="badge bg-info">URL Check</span></td>
+                                        <td class="text-truncate" style="max-width: 300px;">{{ check.url }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ 'success' if check.security_score >= 70 else 'warning' if check.security_score >= 40 else 'danger' }}">
+                                                {{ check.security_score }}%
+                                            </span>
+                                        </td>
+                                        <td>{{ check.checked_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <!-- User Dashboard -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="display-5 fw-bold text-cyber-blue mb-2">
+                            <i class="fas fa-tachometer-alt me-3"></i>Dashboard
+                        </h1>
+                        <p class="lead text-muted">Welcome back, {{ current_user.username }}! Here's your security analysis history.</p>
+                    </div>
+                    <div>
+                        <a href="{{ url_for('web.download_summary') }}" class="btn btn-cyber-orange btn-lg" 
+                           title="Download a summary PDF with all URLs and their safety percentages, generated passwords, and password checks">
+                            <i class="fas fa-file-pdf me-2"></i>Download PDF Summary
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Statistics -->
+        <div class="row mb-5">
+            <div class="col-md-3 mb-3">
+                <div class="admin-stat-card border-left-primary">
+                    <div class="stat-icon text-cyber-blue">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <div class="stat-number">{{ stats.total_url_checks }}</div>
+                    <div class="stat-label">URL Checks</div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-3">
+                <div class="admin-stat-card border-left-success">
+                    <div class="stat-icon text-cyber-green">
+                        <i class="fas fa-key"></i>
+                    
+            
+            
+                    <div class="stat-label">{{ stats.total_password_checks }}</div>
+                    <div class="stat-label">Password Checks</div></div>
+                </div>
+                    </div>
+            <div class="col-md-3 mb-3">
+                <div class="admin-stat-card border-left-info">
+                    <div class="stat-icon text-cyber-purple">
+                        <i class="fas fa-random"></i>
+                    </div>
+                    <div class="stat-number">{{ stats.total_generated_passwords }}</div>
+                    <div class="stat-label">Generated Passwords</div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-3">
+                <div class="admin-stat-card border-left-warning">
+                    <div class="stat-icon text-cyber-orange">
+                        <i class="fas fa-file-download"></i>
+                    </div>
+                    <div class="stat-number">{{ stats.total_reports }}</div>
+                    <div class="stat-label">Downloaded Reports</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Phishing Analysis History -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card border-info">
+                    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-brain me-2"></i>My AI Phishing Analaysis History (ML System)</h5>
+                        <a href="{{ url_for('web.ai_scanner') }}" class="btn btn-sm btn-light text-info">New AI Scan <i class="fas fa-plus ms-1"></i></a>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>URL</th>
+                                        <th>AI Result</th>
+                                        <th>AI Confidence</th>
+                                        <th>Scan Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for scan in ai_scans[:10] %}
+                                    <tr>
+                                        <td class="text-truncate" style="max-width: 300px;">{{ scan.url }}</td>
+                                        <td>
+                                            {% if scan.risk_level == 'Low' %}
+                                                <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Verified Safe</span>
+                                            {% else %}
+                                                <span class="badge bg-danger"><i class="fas fa-exclamation-triangle me-1"></i>Risk Detected</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="progress" style="height: 10px; width: 100px;">
+                                                <div class="progress-bar {{ 'bg-danger' if scan.final_risk_score > 50 else 'bg-success' }}" 
+                                                     style="width: {{ scan.final_risk_score|round }}%"></div>
+                                            </div>
+                                            <small>{{ scan.final_risk_score|round(1) }}%</small>
+                                        </td>
+                                        <td>{{ scan.checked_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="4" class="text-center py-4 text-muted">You haven't used the AI Scanner yet.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if url_checks %}
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-cyber-blue text-white">
+                        <h5 class="mb-0"><i class="fas fa-link me-2"></i>URL Security Checks History</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>URL</th>
+                                        <th>Security Score</th>
+                                        <th>Status</th>
+                                        <th>Checked Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for check in url_checks[:10] %}
+                                    <tr>
+                                        <td class="text-truncate" style="max-width: 300px;">{{ check.url }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ 'success' if check.security_score >= 70 else 'warning' if check.security_score >= 40 else 'danger' }}">
+                                                {{ check.security_score }}/100
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if check.is_safe %}
+                                                <span class="badge bg-success">Safe</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Risk Detected</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ check.checked_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                        <td>
+                                            <a href="{{ url_for('web.download_report', report_type='url', check_id=check.id, format='pdf') }}" 
+                                               class="btn btn-outline-primary btn-sm" title="Download PDF Report">
+                                                <i class="fas fa-file-pdf me-1"></i>PDF
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Password Checks History -->
+        {% if password_checks %}
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-cyber-purple text-white">
+                        <h5 class="mb-0"><i class="fas fa-key me-2"></i>Password Analysis History</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Strength Score</th>
+                                        <th>Strength Level</th>
+                                        <th>Character Types</th>
+                                        <th>Checked Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for check in password_checks[:10] %}
+                                    <tr>
+                                        <td>
+                                            <span class="badge bg-{{ 'success' if check.strength_score >= 80 else 'warning' if check.strength_score >= 60 else 'danger' }}">
+                                                {{ check.strength_score }}/100
+                                            </span>
+                                        </td>
+                                        <td>{{ check.strength_level }}</td>
+                                        <td>
+                                            <small>
+                                                {% if check.has_uppercase %}<span class="badge bg-success">A-Z</span>{% endif %}
+                                                {% if check.has_lowercase %}<span class="badge bg-success">a-z</span>{% endif %}
+                                                {% if check.has_numbers %}<span class="badge bg-success">0-9</span>{% endif %}
+                                                {% if check.has_symbols %}<span class="badge bg-success">!@#</span>{% endif %}
+                                            </small>
+                                        </td>
+                                        <td>{{ check.checked_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                        <td>
+                                            <a href="{{ url_for('web.download_report', report_type='password', check_id=check.id, format='pdf') }}" 
+                                               class="btn btn-outline-primary btn-sm" title="Download PDF Report">
+                                                <i class="fas fa-file-pdf me-1"></i>PDF
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- No Data Message -->
+        {% if not url_checks and not password_checks and not generated_passwords %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card text-center">
+                    <div class="card-body py-5">
+                        <i class="fas fa-chart-line display-1 text-muted mb-4"></i>
+                        <h3 class="text-muted">No Security Analysis History</h3>
+                        <p class="text-muted mb-4">Start using our security tools to see your analysis history here.</p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="{{ url_for('web.ai_scanner') }}" class="btn btn-info btn-lg">
+                                <i class="fas fa-robot me-2"></i>Start AI Phishing Scan (Project Star)
+                            </a>
+                            <a href="{{ url_for('web.url_checker') }}" class="btn btn-cyber-blue">
+                                <i class="fas fa-shield-virus me-2"></i>Deep Analysis
+                            </a>
+                            <a href="{{ url_for('web.password_checker') }}" class="btn btn-cyber-purple">
+                                <i class="fas fa-key me-2"></i>Check Password
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if current_user.is_admin %}
+<script>
+// URL Safety Distribution Chart
+const urlSafetyCtx = document.getElementById('urlSafetyChart').getContext('2d');
+const urlSafetyChart = new Chart(urlSafetyCtx, {
+    type: 'pie',
+    data: {
+        labels: ['Safe URLs', 'Suspicious URLs', 'Dangerous URLs'],
+        datasets: [{
+            data: [
+                {{ stats.safe_urls|default(0) }},
+                {{ stats.suspicious_urls|default(0) }},
+                {{ stats.dangerous_urls|default(0) }}
+            ],
+            backgroundColor: [
+                '#198754',
+                '#ffc107',
+                '#dc3545'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    color: '#333',
+                    font: {
+                        size: 12
+                    }
+                }
+            }
+        },
+        backgroundColor: '#ffffff',
+        layout: {
+            padding: 10
+        }
+    }
+});
+
+// Activity Trends Chart
+const activityCtx = document.getElementById('activityChart').getContext('2d');
+const activityChart = new Chart(activityCtx, {
+    type: 'bar',
+    data: {
+        labels: ['URL Checks', 'Password Checks', 'Generated Passwords', 'Surveys'],
+        datasets: [{
+            label: 'Activity Count',
+            data: [
+                {{ stats.total_url_checks }},
+                {{ stats.total_password_checks }},
+                {{ stats.total_generated_passwords }},
+                {{ stats.total_surveys }}
+            ],
+            backgroundColor: [
+                '#0d6efd',
+                '#6f42c1',
+                '#198754',
+                '#fd7e14'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        backgroundColor: '#ffffff',
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    color: '#333'
+                },
+                grid: {
+                    color: 'rgba(0,0,0,0.1)'
+                }
+            },
+            x: {
+                ticks: {
+                    color: '#333'
+                },
+                grid: {
+                    color: 'rgba(0,0,0,0.1)'
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#333'
+                }
+            }
+        },
+        layout: {
+            padding: 10
+        }
+    }
+});
+
+// User blocking functionality
+function toggleUserStatus(userId, username) {
+    if (confirm(`Are you sure you want to block/unblock user "${username}"?`)) {
+        fetch(`/admin/toggle-user-status/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while updating user status.');
+        });
+    }
+}
+
+// Feedback management functions
+function viewFeedback(feedbackId) {
+    fetch(`/admin/feedback/${feedbackId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const feedback = data.feedback;
+                const modalContent = `
+                    <div class="modal fade" id="feedbackModal" tabindex="-1">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Feedback Details</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong>Name:</strong> ${feedback.name}<br>
+                                            <strong>Email:</strong> ${feedback.email}<br>
+                                            <strong>Experience:</strong> ${feedback.experience_level}<br>
+                                            <strong>Primary Concern:</strong> ${feedback.primary_concern}
+                                        </div>
+                                        <div class="col-md-6">
+                                            <strong>Rating:</strong> ${feedback.satisfaction_rating}/5<br>
+                                            <strong>Submitted:</strong> ${feedback.submitted_at}<br>
+                                            <strong>Status:</strong> ${feedback.is_reviewed ? 'Reviewed' : 'Pending'}
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong>Tools Used:</strong><br>
+                                            <p>${feedback.tools_used || 'Not specified'}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <strong>Feature Requests:</strong><br>
+                                            <p>${feedback.feature_requests || 'Not specified'}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <strong>Improvement Suggestions:</strong><br>
+                                            <p>${feedback.improvement_suggestions || 'Not specified'}</p>
+                                        </div>
+                                    </div>
+                                    ${feedback.reviewer_notes ? `
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <strong>Reviewer Notes:</strong><br>
+                                            <p>${feedback.reviewer_notes}</p>
+                                        </div>
+                                    </div>
+                                    ` : ''}
+                                </div>
+                                <div class="modal-footer">
+                                    ${!feedback.is_reviewed ? `
+                                    <button type="button" class="btn btn-success" onclick="markReviewed(${feedback.id})">
+                                        Mark as Reviewed
+                                    </button>
+                                    ` : ''}
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Remove existing modal if any
+                const existingModal = document.getElementById('feedbackModal');
+                if (existingModal) {
+                    existingModal.remove();
+                }
+                
+                // Add new modal
+                document.body.insertAdjacentHTML('beforeend', modalContent);
+                
+                // Show modal
+                const modal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+                modal.show();
+                
+                // Clean up after modal is hidden
+                document.getElementById('feedbackModal').addEventListener('hidden.bs.modal', function() {
+                    this.remove();
+                });
+                
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while loading feedback details.');
+        });
+}
+
+function markReviewed(feedbackId) {
+    const notes = prompt('Add reviewer notes (optional):');
+    
+    fetch(`/admin/feedback/${feedbackId}/mark-reviewed`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            reviewer_notes: notes
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Feedback marked as reviewed!');
+            location.reload();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while marking feedback as reviewed.');
+    });
+}
+</script>
+{% endif %}
+{% endblock %}
