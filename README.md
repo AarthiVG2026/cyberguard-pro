@@ -13,6 +13,20 @@ CyberGuard Pro is an advanced, AI-powered web application designed to protect us
 ![App Working Demo](./static/assets/screenshots/app_working_demo.gif)
 
 
+**Features**
+
+**SAFE WEBSITE**
+
+![AI Phishing Scanner](./static/assets/screenshots/ai_phishing_scanner.png)
+
+**PASSWORD STRENGTH CHECKER**
+
+![Password Strength Checker](./static/assets/screenshots/password_strength_checker.png)
+
+**Dashboard**
+![Dashboard](./static/assets/screenshots/dashboard_home.png)
+
+---
 
 ## 🚀 Key Features
 
@@ -215,20 +229,7 @@ This project is proprietary. All rights reserved.
 
 ---
 
-**Features**
 
-**SAFE WEBSITE**
-
-![AI Phishing Scanner](./static/assets/screenshots/ai_phishing_scanner.png)
-
-**PASSWORD STRENGTH CHECKER**
-
-![Password Strength Checker](./static/assets/screenshots/password_strength_checker.png)
-
-**Dashboard**
-![Dashboard](./static/assets/screenshots/dashboard_home.png)
-
----
 
 ## 🧠 Final Note
 
