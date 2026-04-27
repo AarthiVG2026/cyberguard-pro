@@ -1,0 +1,91 @@
+<svg width="500" height="300" viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="teamGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:0.8"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="500" height="300" fill="url(#teamGradient)" opacity="0.1"/>
+  
+  <!-- Security Team Members -->
+  <g transform="translate(100, 150)">
+    <!-- Person 1 -->
+    <circle cx="0" cy="-20" r="15" fill="#00d4ff"/>
+    <rect x="-10" y="-5" width="20" height="30" rx="5" fill="#8b5cf6"/>
+    <rect x="-15" y="0" width="30" height="25" rx="3" fill="#00ff88"/>
+    <!-- Shield badge -->
+    <path d="M-5 -35L-15 -30l0 15c0 8.4 6.72 16.8 13.5 18 6.78-1.2 13.5-9.6 13.5-18L12 -30l-12-5z" 
+          fill="#00ff88" opacity="0.8"/>
+    <text x="0" y="50" text-anchor="middle" fill="#00d4ff" font-size="10" font-weight="bold">Security Analyst</text>
+  </g>
+  
+  <g transform="translate(250, 150)">
+    <!-- Person 2 -->
+    <circle cx="0" cy="-20" r="15" fill="#00ff88"/>
+    <rect x="-10" y="-5" width="20" height="30" rx="5" fill="#ff0059"/>
+    <rect x="-15" y="0" width="30" height="25" rx="3" fill="#00d4ff"/>
+    <!-- Key badge -->
+    <circle cx="0" cy="-35" r="6" fill="#00d4ff"/>
+    <rect x="6" y="-37" width="15" height="4" fill="#00d4ff"/>
+    <rect x="18" y="-40" width="3" height="3" fill="#00d4ff"/>
+    <text x="0" y="50" text-anchor="middle" fill="#00ff88" font-size="10" font-weight="bold">Security Engineer</text>
+  </g>
+  
+  <g transform="translate(400, 150)">
+    <!-- Person 3 -->
+    <circle cx="0" cy="-20" r="15" fill="#ff0059"/>
+    <rect x="-10" y="-5" width="20" height="30" rx="5" fill="#00d4ff"/>
+    <rect x="-15" y="0" width="30" height="25" rx="3" fill="#8b5cf6"/>
+    <!-- Monitor badge -->
+    <rect x="-8" y="-40" width="16" height="10" rx="2" fill="#00d4ff"/>
+    <rect x="-6" y="-38" width="12" height="6" fill="#000"/>
+    <rect x="-2" y="-30" width="4" height="2" fill="#00d4ff"/>
+    <text x="0" y="50" text-anchor="middle" fill="#ff0059" font-size="10" font-weight="bold">Security Architect</text>
+  </g>
+  
+  <!-- Connection Lines -->
+  <g opacity="0.5">
+    <line x1="100" y1="130" x2="250" y2="130" stroke="#00d4ff" stroke-width="2" stroke-dasharray="3,3">
+      <animate attributeName="stroke-dashoffset" values="0;6" dur="1s" repeatCount="indefinite"/>
+    </line>
+    <line x1="250" y1="130" x2="400" y2="130" stroke="#00ff88" stroke-width="2" stroke-dasharray="3,3">
+      <animate attributeName="stroke-dashoffset" values="0;6" dur="1.2s" repeatCount="indefinite"/>
+    </line>
+  </g>
+  
+  <!-- Security Elements -->
+  <g opacity="0.6">
+    <!-- Floating security icons -->
+    <g transform="translate(50, 50)">
+      <rect x="-5" y="-5" width="10" height="10" rx="2" fill="#8b5cf6"/>
+      <circle cx="0" cy="0" r="3" fill="#00d4ff">
+        <animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <animateTransform attributeName="transform" type="translate" values="50 50;50 30;50 50" dur="3s" repeatCount="indefinite"/>
+    </g>
+    
+    <g transform="translate(450, 80)">
+      <circle cx="0" cy="0" r="8" fill="#00ff88" opacity="0.7"/>
+      <path d="M-4 -2l3 3 6-6" stroke="#000" stroke-width="2" fill="none"/>
+      <animateTransform attributeName="transform" type="translate" values="450 80;450 60;450 80" dur="4s" repeatCount="indefinite"/>
+    </g>
+    
+    <!-- Network connections -->
+    <g transform="translate(250, 80)">
+      <circle cx="0" cy="0" r="4" fill="#00d4ff"/>
+      <line x1="-10" y1="-10" x2="10" y2="10" stroke="#00d4ff" stroke-width="1"/>
+      <line x1="10" y1="-10" x2="-10" y2="10" stroke="#00d4ff" stroke-width="1"/>
+      <circle cx="-10" cy="-10" r="2" fill="#00ff88"/>
+      <circle cx="10" cy="-10" r="2" fill="#00ff88"/>
+      <circle cx="-10" cy="10" r="2" fill="#00ff88"/>
+      <circle cx="10" cy="10" r="2" fill="#00ff88"/>
+      <animateTransform attributeName="transform" type="translate" values="250 80;250 60;250 80" dur="5s" repeatCount="indefinite"/>
+    </g>
+  </g>
+  
+  <!-- Title -->
+  <text x="250" y="30" text-anchor="middle" fill="#00d4ff" font-size="16" font-weight="bold">Security Team</text>
+  <text x="250" y="280" text-anchor="middle" fill="#8b5cf6" font-size="12">Dedicated professionals protecting your digital assets</text>
+</svg>
